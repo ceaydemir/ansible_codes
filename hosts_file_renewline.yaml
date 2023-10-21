@@ -1,0 +1,12 @@
+---
+- hosts: all
+  tasks:
+  - name: checking for hosts file
+    shell: grep modem /etc/hosts | wc -l
+    register: test_grep
+
+  - debug: msg="{{test_grep.stdout}}"
+
+  - name: adding new record
+    lineinfile: dest=/etc/hosts line="192.168.1.1	modem"
+    when: test_grep.stdout == "0"
